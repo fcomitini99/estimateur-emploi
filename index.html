@@ -56,8 +56,9 @@
     </form>
 
     <section id="result" class="card result" hidden aria-live="polite">
+      <p id="sharedBanner" class="shared-banner" hidden>Quelqu'un a partagé son résultat avec vous.</p>
       <p class="eyebrow">Résultat de l'analyse</p>
-      <p class="verdict-intro">Vous trouverez un travail dans&nbsp;:</p>
+      <p id="verdictIntro" class="verdict-intro">Vous trouverez un travail dans&nbsp;:</p>
       <p class="years"><span id="years">0</span> <span class="unit">ans</span></p>
       <p id="detail" class="detail"></p>
       <p id="date" class="date"></p>
@@ -66,7 +67,13 @@
       <p id="comment" class="comment"></p>
       <h2>Détail du calcul</h2>
       <ul id="breakdown" class="breakdown"></ul>
-      <button type="button" id="share" class="ghost">Copier mon résultat</button>
+      <div id="shareActions" class="actions center">
+        <button type="button" id="share" class="primary">Partager mon résultat</button>
+        <a id="linkedin" class="button ghost" href="#" target="_blank" rel="noopener">Partager sur LinkedIn</a>
+      </div>
+      <div id="tryActions" class="actions center" hidden>
+        <button type="button" id="tryIt" class="primary">Faire le test à mon tour</button>
+      </div>
     </section>
 
     <footer>

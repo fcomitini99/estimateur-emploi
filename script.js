@@ -118,10 +118,34 @@ function fmt(n, d = 0) {
   return n.toLocaleString("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
+// Réponses encodées "domaine-experience-phd-ia-crime" (indices) pour le lien de partage
+function encoder(r) { return [r.d, r.e, r.p, r.i, r.c].join("-"); }
+function decoder(code) {
+  const n = String(code || "").split("-").map(Number);
+  if (n.length !== 5 || n.some((x) => !Number.isInteger(x) || x < 0)) return null;
+  const [d, e, p, i, c] = n;
+  if (d >= DOMAINES.length || e > 1 || p > 35 || i >= IA.length || c >= CRIME.length) return null;
+  return { d, e, p, i, c };
+}
+
+function calculer(r) {
+  const d = DOMAINES[r.d], i = IA[r.i], c = CRIME[r.c];
+  const facteurs = [
+    ["Domaine : " + d[0], d[1], POIDS.domaine],
+    ["Plus de 25 ans d'expérience : " + (r.e ? "oui" : "non"), r.e, POIDS.experience],
+    [r.p + " doctorat" + (r.p > 1 ? "s" : ""), r.p / 35, POIDS.phd],
+    ["Implant : " + i[0], i[1], POIDS.ia],
+    ["Affiliation : " + c[0], c[1], POIDS.crime],
+  ];
+  const score = facteurs.reduce((s, [, v, w]) => s + v * w, 0);
+  // Interpolation géométrique : chaque point de score divise le temps d'attente
+  const annees = MAX_YEARS * Math.pow(MIN_YEARS / MAX_YEARS, score);
+  return { annees, score, facteurs };
+}
+
 $("form").addEventListener("submit", (e) => {
   e.preventDefault();
-  const form = e.target;
-  const exp = form.querySelector("input[name=experience]:checked");
+  const exp = e.target.querySelector("input[name=experience]:checked");
   const manquants = [];
   if ($("domaine").value === "") manquants.push("le domaine");
   if (!exp) manquants.push("l'expérience");
@@ -131,32 +155,28 @@ $("form").addEventListener("submit", (e) => {
     alert("Il manque encore : " + manquants.join(", ") + ".");
     return;
   }
-
-  const phd = Number($("phd").value);
-  const d = DOMAINES[$("domaine").value];
-  const i = IA[$("ia").value];
-  const c = CRIME[$("crime").value];
-
-  const facteurs = [
-    ["Domaine : " + d[0], d[1], POIDS.domaine],
-    ["Plus de 25 ans d'expérience : " + (exp.value === "1" ? "oui" : "non"), Number(exp.value), POIDS.experience],
-    [phd + " doctorat" + (phd > 1 ? "s" : ""), phd / 35, POIDS.phd],
-    ["Implant : " + i[0], i[1], POIDS.ia],
-    ["Affiliation : " + c[0], c[1], POIDS.crime],
-  ];
-
-  const score = facteurs.reduce((s, [, v, w]) => s + v * w, 0);
-  // Interpolation géométrique : chaque point de score divise le temps d'attente
-  const annees = MAX_YEARS * Math.pow(MIN_YEARS / MAX_YEARS, score);
-
-  afficher(annees, score, facteurs);
+  const r = {
+    d: Number($("domaine").value), e: Number(exp.value), p: Number($("phd").value),
+    i: Number($("ia").value), c: Number($("crime").value),
+  };
+  afficher(r, false);
 });
 
-function afficher(annees, score, facteurs) {
+function lienPartage(r) {
+  return location.origin + location.pathname + "?r=" + encoder(r);
+}
+
+function afficher(r, partage) {
+  const { annees, score, facteurs } = calculer(r);
   const entier = Math.floor(annees);
   const moisTotal = (annees - entier) * 12;
   const mois = Math.floor(moisTotal);
   const jours = Math.round((moisTotal - mois) * 30.44);
+
+  $("sharedBanner").hidden = !partage;
+  $("shareActions").hidden = partage;
+  $("tryActions").hidden = !partage;
+  $("verdictIntro").textContent = partage ? "Cette personne trouvera un travail dans :" : "Vous trouverez un travail dans :";
 
   $("years").textContent = fmt(annees, 1);
   $("detail").textContent =
@@ -182,21 +202,38 @@ function afficher(annees, score, facteurs) {
   res.style.animation = "none";
   res.offsetHeight;
   res.style.animation = "";
-  res.scrollIntoView({ behavior: "smooth", block: "start" });
+  res.scrollIntoView({ behavior: partage ? "auto" : "smooth", block: "start" });
+
+  const url = lienPartage(r);
+  const texte = `Selon l'Institut National de Prévisions Professionnelles Approximatives, je trouverai un travail dans ${fmt(annees, 1)} ans. Et vous ?`;
 
   $("share").onclick = async () => {
-    const txt = `Selon l'Estimateur d'Emploi, je trouverai un travail dans ${fmt(annees, 1)} ans. 🫠 ${location.href}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: document.title, text: texte, url }); } catch {}
+      return;
+    }
     try {
-      await navigator.clipboard.writeText(txt);
-      $("share").textContent = "Copié !";
-      setTimeout(() => ($("share").textContent = "Copier mon résultat"), 1500);
+      await navigator.clipboard.writeText(texte + " " + url);
+      $("share").textContent = "Lien copié !";
+      setTimeout(() => ($("share").textContent = "Partager mon résultat"), 1800);
     } catch {
-      prompt("Copiez ce texte :", txt);
+      prompt("Copiez ce lien :", texte + " " + url);
     }
   };
+  $("linkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(url);
 }
+
+$("tryIt").addEventListener("click", () => {
+  history.replaceState(null, "", location.pathname);
+  $("form").reset();
+  $("form").scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
 $("form").addEventListener("reset", () => {
   $("phdOut").textContent = "0";
   $("result").hidden = true;
 });
+
+// Ouverture d'un lien partagé : afficher le résultat de la personne
+const recu = decoder(new URLSearchParams(location.search).get("r"));
+if (recu) afficher(recu, true);
