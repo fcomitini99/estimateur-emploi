@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estimateur d'Emploi</title>
+  <meta name="description" content="Estimation scientifiquement douteuse du temps nécessaire pour trouver un travail.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏳</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Institut National de Prévisions Professionnelles Approximatives</p>
+      <h1>Estimation du temps nécessaire pour trouver un travail</h1>
+      <p class="lede">Répondez honnêtement à ces cinq questions. Notre algorithme, validé par aucun comité scientifique, calculera avec précision le moment où un employeur daignera enfin vous rappeler.</p>
+    </header>
+
+    <form id="form" class="card" novalidate>
+      <div class="field">
+        <label for="domaine"><span class="num">1</span> Dans quel domaine cherchez-vous un emploi&nbsp;?</label>
+        <select id="domaine" required></select>
+      </div>
+
+      <fieldset class="field">
+        <legend><span class="num">2</span> Avez-vous plus de 25 ans d'expérience dans votre domaine&nbsp;?</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="experience" value="0" required> Non</label>
+          <label class="choice"><input type="radio" name="experience" value="1"> Oui</label>
+        </div>
+        <p class="hint">Note : les stages non rémunérés comptent double, mais seulement dans votre cœur.</p>
+      </fieldset>
+
+      <div class="field">
+        <label for="phd"><span class="num">3</span> Combien de doctorats (PhD) possédez-vous&nbsp;? <output id="phdOut">0</output></label>
+        <input type="range" id="phd" min="0" max="35" value="0" step="1">
+        <div class="scale"><span>0</span><span>35</span></div>
+      </div>
+
+      <div class="field">
+        <label for="ia"><span class="num">4</span> Disposez-vous d'une intelligence artificielle implantée dans le cerveau&nbsp;?</label>
+        <select id="ia" required></select>
+      </div>
+
+      <div class="field">
+        <label for="crime"><span class="num">5</span> Êtes-vous affilié(e) à une organisation criminelle locale&nbsp;?</label>
+        <select id="crime" required></select>
+        <p class="hint">Vos réponses restent strictement confidentielles (elles ne quittent jamais votre navigateur).</p>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary">Calculer mon avenir</button>
+        <button type="reset" class="ghost">Recommencer</button>
+      </div>
+    </form>
+
+    <section id="result" class="card result" hidden aria-live="polite">
+      <p class="eyebrow">Résultat de l'analyse</p>
+      <p class="verdict-intro">Vous trouverez un travail dans&nbsp;:</p>
+      <p class="years"><span id="years">0</span> <span class="unit">ans</span></p>
+      <p id="detail" class="detail"></p>
+      <p id="date" class="date"></p>
+      <div class="meter" aria-hidden="true"><div id="meterFill"></div></div>
+      <div class="meter-labels"><span>15 ans</span><span>450 ans</span></div>
+      <p id="comment" class="comment"></p>
+      <h2>Détail du calcul</h2>
+      <ul id="breakdown" class="breakdown"></ul>
+      <button type="button" id="share" class="ghost">Copier mon résultat</button>
+    </section>
+
+    <footer>
+      <p>Outil purement humoristique. Aucune organisation criminelle n'a été contactée durant le développement.</p>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
