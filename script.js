@@ -207,32 +207,28 @@ function afficher(r, partage) {
   const url = lienPartage(r);
 
   const texte = `Selon l'Estimateur d'Emploi, je trouverai un travail dans ${fmt(annees, 1)} ans. Et vous, combien de temps ? Faites le test :`;
-  const t = encodeURIComponent(texte), u = encodeURIComponent(url), tu = encodeURIComponent(texte + " " + url);
-  $("shWhatsapp").href = "https://wa.me/?text=" + tu;
-  $("shTelegram").href = "https://t.me/share/url?url=" + u + "&text=" + t;
-  $("shFacebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + u;
-  $("shX").href = "https://twitter.com/intent/tweet?text=" + t + "&url=" + u;
-  $("shLinkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + u;
-  $("shEmail").href = "mailto:?subject=" + encodeURIComponent("Estimateur d'Emploi") + "&body=" + tu;
 
-  $("shCopy").onclick = async () => {
+  // Partage natif (WhatsApp, SMS, etc.) si disponible, sinon copie du lien
+  $("share").onclick = async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: document.title, text: texte, url }); } catch {}
+      return;
+    }
     try {
       await navigator.clipboard.writeText(texte + " " + url);
-      $("shCopy").textContent = "Lien copié !";
-      setTimeout(() => ($("shCopy").textContent = "Copier le lien"), 1800);
+      $("share").textContent = "Lien copié ! Collez-le où vous voulez";
+      setTimeout(() => ($("share").textContent = "Partager mon résultat"), 2500);
     } catch {
       prompt("Copiez ce lien :", texte + " " + url);
     }
   };
-  $("shNative").hidden = !navigator.share;
-  $("shNative").onclick = () => navigator.share({ title: document.title, text: texte, url }).catch(() => {});
 }
 
-$("tryIt").addEventListener("click", () => {
+document.querySelectorAll(".tryIt").forEach((b) => b.addEventListener("click", () => {
   history.replaceState(null, "", location.pathname);
   $("form").reset();
   $("form").scrollIntoView({ behavior: "smooth", block: "start" });
-});
+}));
 
 $("form").addEventListener("reset", () => {
   $("phdOut").textContent = "0";

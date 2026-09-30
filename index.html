@@ -56,7 +56,10 @@
     </form>
 
     <section id="result" class="card result" hidden aria-live="polite">
-      <p id="sharedBanner" class="shared-banner" hidden>Quelqu'un a partagé son résultat avec vous.</p>
+      <div id="sharedBanner" class="shared-banner" hidden>
+        <span>Quelqu'un a partagé son résultat avec vous. Et vous, combien de temps&nbsp;?</span>
+        <button type="button" class="primary tryIt">Faire le test</button>
+      </div>
       <p class="eyebrow">Résultat de l'analyse</p>
       <p id="verdictIntro" class="verdict-intro">Vous trouverez un travail dans&nbsp;:</p>
       <p class="years"><span id="years">0</span> <span class="unit">ans</span></p>
@@ -67,21 +70,11 @@
       <p id="comment" class="comment"></p>
       <h2>Détail du calcul</h2>
       <ul id="breakdown" class="breakdown"></ul>
-      <div id="shareActions">
-        <h2 class="share-title">Partager mon résultat</h2>
-        <div class="share-grid">
-          <a id="shWhatsapp" class="share-btn wa" target="_blank" rel="noopener">WhatsApp</a>
-          <a id="shTelegram" class="share-btn tg" target="_blank" rel="noopener">Telegram</a>
-          <a id="shFacebook" class="share-btn fb" target="_blank" rel="noopener">Facebook</a>
-          <a id="shX" class="share-btn x" target="_blank" rel="noopener">X</a>
-          <a id="shLinkedin" class="share-btn li" target="_blank" rel="noopener">LinkedIn</a>
-          <a id="shEmail" class="share-btn mail">E-mail</a>
-          <button type="button" id="shCopy" class="share-btn">Copier le lien</button>
-          <button type="button" id="shNative" class="share-btn" hidden>Autres applis…</button>
-        </div>
+      <div id="shareActions" class="actions center">
+        <button type="button" id="share" class="primary big">Partager mon résultat</button>
       </div>
       <div id="tryActions" class="actions center" hidden>
-        <button type="button" id="tryIt" class="primary">Faire le test à mon tour</button>
+        <button type="button" class="primary big tryIt">Faire le test à mon tour</button>
       </div>
     </section>
 
