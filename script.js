@@ -205,22 +205,27 @@ function afficher(r, partage) {
   res.scrollIntoView({ behavior: partage ? "auto" : "smooth", block: "start" });
 
   const url = lienPartage(r);
-  const texte = `Selon l'Institut National de Prévisions Professionnelles Approximatives, je trouverai un travail dans ${fmt(annees, 1)} ans. Et vous ?`;
 
-  $("share").onclick = async () => {
-    if (navigator.share) {
-      try { await navigator.share({ title: document.title, text: texte, url }); } catch {}
-      return;
-    }
+  const texte = `Selon l'Estimateur d'Emploi, je trouverai un travail dans ${fmt(annees, 1)} ans. Et vous, combien de temps ? Faites le test :`;
+  const t = encodeURIComponent(texte), u = encodeURIComponent(url), tu = encodeURIComponent(texte + " " + url);
+  $("shWhatsapp").href = "https://wa.me/?text=" + tu;
+  $("shTelegram").href = "https://t.me/share/url?url=" + u + "&text=" + t;
+  $("shFacebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + u;
+  $("shX").href = "https://twitter.com/intent/tweet?text=" + t + "&url=" + u;
+  $("shLinkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + u;
+  $("shEmail").href = "mailto:?subject=" + encodeURIComponent("Estimateur d'Emploi") + "&body=" + tu;
+
+  $("shCopy").onclick = async () => {
     try {
       await navigator.clipboard.writeText(texte + " " + url);
-      $("share").textContent = "Lien copié !";
-      setTimeout(() => ($("share").textContent = "Partager mon résultat"), 1800);
+      $("shCopy").textContent = "Lien copié !";
+      setTimeout(() => ($("shCopy").textContent = "Copier le lien"), 1800);
     } catch {
       prompt("Copiez ce lien :", texte + " " + url);
     }
   };
-  $("linkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(url);
+  $("shNative").hidden = !navigator.share;
+  $("shNative").onclick = () => navigator.share({ title: document.title, text: texte, url }).catch(() => {});
 }
 
 $("tryIt").addEventListener("click", () => {

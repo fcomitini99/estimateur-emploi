@@ -67,9 +67,18 @@
       <p id="comment" class="comment"></p>
       <h2>Détail du calcul</h2>
       <ul id="breakdown" class="breakdown"></ul>
-      <div id="shareActions" class="actions center">
-        <button type="button" id="share" class="primary">Partager mon résultat</button>
-        <a id="linkedin" class="button ghost" href="#" target="_blank" rel="noopener">Partager sur LinkedIn</a>
+      <div id="shareActions">
+        <h2 class="share-title">Partager mon résultat</h2>
+        <div class="share-grid">
+          <a id="shWhatsapp" class="share-btn wa" target="_blank" rel="noopener">WhatsApp</a>
+          <a id="shTelegram" class="share-btn tg" target="_blank" rel="noopener">Telegram</a>
+          <a id="shFacebook" class="share-btn fb" target="_blank" rel="noopener">Facebook</a>
+          <a id="shX" class="share-btn x" target="_blank" rel="noopener">X</a>
+          <a id="shLinkedin" class="share-btn li" target="_blank" rel="noopener">LinkedIn</a>
+          <a id="shEmail" class="share-btn mail">E-mail</a>
+          <button type="button" id="shCopy" class="share-btn">Copier le lien</button>
+          <button type="button" id="shNative" class="share-btn" hidden>Autres applis…</button>
+        </div>
       </div>
       <div id="tryActions" class="actions center" hidden>
         <button type="button" id="tryIt" class="primary">Faire le test à mon tour</button>

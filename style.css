@@ -143,3 +143,19 @@ footer { text-align: center; font-size: 13px; color: var(--muted); }
   background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 14px;
 }
 [hidden] { display: none !important; }
+
+.share-title { text-align: center !important; margin-top: 8px !important; }
+.share-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.share-btn {
+  display: flex; align-items: center; justify-content: center;
+  padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font: inherit; font-weight: 600; font-size: 14px;
+  text-decoration: none; cursor: pointer;
+}
+.share-btn:hover { border-color: var(--muted); }
+.share-btn.wa { background: #25d366; border-color: #25d366; color: #fff; }
+.share-btn.tg { background: #229ed9; border-color: #229ed9; color: #fff; }
+.share-btn.fb { background: #1877f2; border-color: #1877f2; color: #fff; }
+.share-btn.x  { background: #000; border-color: #444; color: #fff; }
+.share-btn.li { background: #0a66c2; border-color: #0a66c2; color: #fff; }
+.share-btn.wa:hover, .share-btn.tg:hover, .share-btn.fb:hover, .share-btn.li:hover, .share-btn.x:hover { filter: brightness(1.08); }
